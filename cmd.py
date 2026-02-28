@@ -121,6 +121,9 @@ def run_screener(
     # Run strategy
     results = runner(exchange, symbols, timeframe, limit)
 
+    # Sort by highest volume
+    results.sort(key=lambda r: r.get("volume", 0), reverse=True)
+
     # Print results to console
     print_results(results, strategy, timeframe)
 
