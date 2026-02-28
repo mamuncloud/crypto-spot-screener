@@ -2,8 +2,8 @@
 """
 Crypto Spot Screener - OKX
 Usage:
-    python main.py --strategy breakout_20day --tf 4H
-    python main.py --strategy breakout_20day --tf 1D
+    python main.py --strategy buyonbreakout --tf 4H
+    python main.py --strategy buyonbreakout --tf 1D
     python main.py --strategy rising3methods --tf 1D
 """
 
@@ -13,7 +13,7 @@ from cmd import run_screener
 
 
 VALID_STRATEGIES = [
-    "breakout_20day",
+    "buyonbreakout",
     "rising3methods",
 ]
 
@@ -37,7 +37,7 @@ def parse_args():
         help=(
             "Screening strategy to use.\n"
             "Available strategies:\n"
-            "  breakout_20day  - 20-day breakout strategy\n"
+            "  buyonbreakout  - Buy on Breakout strategy\n"
             "  rising3methods  - Rising Three Methods candlestick pattern\n"
         ),
     )

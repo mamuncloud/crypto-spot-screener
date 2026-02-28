@@ -1,7 +1,7 @@
 """
-screener/breakout20days.py
+screener/buyonbreakout.py
 
-Strategy: 20-Day Breakout
+Strategy: Buy on Breakout
 --------------------------
 Criteria:
   - Current close price breaks ABOVE the highest close of the previous 20 candles.
@@ -50,7 +50,7 @@ def analyze(ohlcv: list) -> Optional[dict]:
 
     if price_breakout and volume_confirmation:
         return {
-            "signal": "BREAKOUT_20D",
+            "signal": "BUY_ON_BREAKOUT",
             "close": current_close,
             "volume": current_volume,
             "prev_high": highest_close,

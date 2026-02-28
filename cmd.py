@@ -84,7 +84,7 @@ def run_screener(
     Main dispatcher: loads the requested strategy and runs the screener.
 
     Args:
-        strategy: Strategy name (e.g., "breakout_20day", "rising3methods").
+        strategy: Strategy name (e.g., "buyonbreakout", "rising3methods").
         timeframe: OHLCV timeframe (e.g., "4H", "1D").
         limit: Number of candles to fetch.
         quote: Quote currency filter.
@@ -92,7 +92,7 @@ def run_screener(
     """
     # Dynamically load the strategy module
     strategy_map = {
-        "breakout_20day": _run_breakout_20day,
+        "buyonbreakout": _run_buyonbreakout,
         "rising3methods": _run_rising3methods,
     }
 
@@ -121,14 +121,14 @@ def run_screener(
     print_results(results, strategy, timeframe)
 
 
-def _run_breakout_20day(
+def _run_buyonbreakout(
     exchange: ccxt.okx,
     symbols: list[str],
     timeframe: str,
     limit: int,
 ) -> list[dict]:
-    """Wrapper to call the breakout_20day screener."""
-    from screener.breakout20days import run as breakout_run
+    """Wrapper to call the buyonbreakout screener."""
+    from screener.buyonbreakout import run as breakout_run
     return breakout_run(exchange, symbols, timeframe, limit)
 
 
