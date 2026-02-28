@@ -8,6 +8,7 @@ and runs the screening logic.
 import sys
 import ccxt
 from typing import Optional
+from notification import DiscordNotifier
 
 
 def get_exchange() -> ccxt.okx:
@@ -79,16 +80,19 @@ def run_screener(
     limit: int = 100,
     quote: str = "USDT",
     top_n: Optional[int] = None,
+    webhook_url: Optional[str] = None,
 ) -> None:
     """
     Main dispatcher: loads the requested strategy and runs the screener.
 
     Args:
-        strategy: Strategy name (e.g., "buyonbreakout", "rising3methods").
-        timeframe: OHLCV timeframe (e.g., "4H", "1D").
-        limit: Number of candles to fetch.
-        quote: Quote currency filter.
-        top_n: If set, only screen top N symbols by volume.
+        strategy:    Strategy name (e.g., "buyonbreakout", "rising3methods").
+        timeframe:   OHLCV timeframe (e.g., "4H", "1D").
+        limit:       Number of candles to fetch.
+        quote:       Quote currency filter.
+        top_n:       If set, only screen top N symbols by volume.
+        webhook_url: Discord Webhook URL. If None, reads DISCORD_WEBHOOK_URL
+                     env var. Set to empty string "" to disable notifications.
     """
     # Dynamically load the strategy module
     strategy_map = {
@@ -117,8 +121,22 @@ def run_screener(
     # Run strategy
     results = runner(exchange, symbols, timeframe, limit)
 
-    # Print results
+    # Print results to console
     print_results(results, strategy, timeframe)
+
+    # Send Discord notification (skip if webhook_url explicitly set to "")
+    if webhook_url != "":
+        notifier = DiscordNotifier(webhook_url=webhook_url or None)
+        if notifier.webhook_url:
+            print()
+            print("[*] Sending Discord notification...")
+            ok = notifier.send_results(results, strategy=strategy, timeframe=timeframe, quote=quote)
+            if ok:
+                print("[✓] Discord notification sent successfully.")
+            else:
+                print("[!] Failed to send Discord notification.")
+        else:
+            print("[~] DISCORD_WEBHOOK_URL not set — skipping notification.")
 
 
 def _run_buyonbreakout(

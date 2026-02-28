@@ -18,9 +18,7 @@ VALID_STRATEGIES = [
 ]
 
 VALID_TIMEFRAMES = [
-    "1m", "3m", "5m", "15m", "30m",
-    "1H", "2H", "4H", "6H", "12H",
-    "1D", "3D", "1W", "1M",
+    "1m", "3m", "5m", "15m"
 ]
 
 
@@ -69,6 +67,17 @@ def parse_args():
         default=None,
         help="Only screen top N symbols by volume (default: all)",
     )
+    parser.add_argument(
+        "--webhook",
+        type=str,
+        default=None,
+        metavar="URL",
+        help=(
+            "Discord Webhook URL for notifications.\n"
+            "Falls back to DISCORD_WEBHOOK_URL env variable if not set.\n"
+            "Use --webhook '' to disable notifications entirely."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -84,6 +93,8 @@ def main():
     print(f"  Limit     : {args.limit} candles")
     if args.top:
         print(f"  Top N     : {args.top} symbols")
+    webhook_display = args.webhook or "(from DISCORD_WEBHOOK_URL env)"
+    print(f"  Notify    : Discord {webhook_display}")
     print("=" * 60)
     print()
 
@@ -93,6 +104,7 @@ def main():
         limit=args.limit,
         quote=args.quote,
         top_n=args.top,
+        webhook_url=args.webhook,
     )
 
 
